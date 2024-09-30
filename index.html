@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="Given an image, a click, and a prompt for an added object, a mask is generated dynamically, simultaneously with the object generation throughout the diffusion process.">
+  <meta property="og:description" content="Given an image, a click, and a prompt for an added object, a mask is generated dynamically, simultaneously with the object generation throughout the diffusion process.">
+  <meta property="og:title" content="Click2Mask: Local Editing with Dynamic Mask Generation">
+  <meta property="og:url" content="https://omeregev.github.io/click2mask">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/images/banner/banner-teaser_1200_630.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Click2Mask">
+
+  <meta name="twitter:title" content="Click2Mask: Local Editing with Dynamic Mask Generation">
+  <meta name="twitter:description" content="Given an image, a click, and a prompt for an added object, a mask is generated dynamically, simultaneously with the object generation throughout the diffusion process.">
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
+  <meta name="twitter:image" content="static/images/banner/banner-teaser_1200_600.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="click2mask, local image editing, dynamic mask generation, genartive AI">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>Click2Mask</title>
+  <link rel="icon" type="image/x-icon" href="static/images/icons/point.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <!-- <link rel="stylesheet" href="static/css/bulma-carousel.min.css"> -->
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" type="text/css" href="./static/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="./static/slick/slick-theme.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <!-- <script src="static/js/bulma-carousel.min.js"></script> -->
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <!-- <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
+  <script type="text/javascript" src="./static/slick/slick.min.js"></script>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+ 
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Click2Mask: Local Editing with Dynamic Mask Generation</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://www.linkedin.com/in/omeregev/">Omer Regev</a>,</span>
+                <span class="author-block">
+                  <a href="https://omriavrahami.com/">Omri Avrahami</a>,</span>
+                  <span class="author-block">
+                    <a href="https://www.cs.huji.ac.il/~danix/">Dani Lischinski</a>
+                  </span>
+                  </div>
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block">The Hebrew University of Jerusalem</span>
+                    <!-- <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span> -->
+                  </div>
+
+                  <div class="column has-text-centered">
+                    <div class="publication-links">
+                      <!-- PDF link -->
+                      <span class="link-block">
+                        <a href="static/paper/Click2Mask.pdf" class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fas fa-file-pdf"></i>
+                        </span>
+                      <span>Paper</span>
+                      </a>
+                    </span>
+
+                    <!-- ArXiv  -->
+                    <span class="link-block">
+                      <a href="https://arxiv.org/abs/2409.08272" class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="ai ai-arxiv"></i>
+                        </span>
+                      <span>arXiv</span>
+                      </a>
+                    </span>
+                    
+                    <!-- Github link -->
+                    <span class="link-block">
+                        <!-- <a href="https://github.com/YOUR REPO HERE" target="_blank"
+                          class="external-link button is-normal is-rounded is-dark"> -->
+                        <a target="_blank"
+                          class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fab fa-github"></i>
+                        </span>
+                      <span>Code - soon</span>
+                      </a>
+                    </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Teaser -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="teaser" autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+          <source src="static/videos/teaser.mp4" type="video/mp4">
+        </video>
+
+        <h2 class="subtitle has-text-centered">
+          <span class="method-name">Click2Mask</span>: Given an image, 
+          a <span class="method-name">Click</span> (blue dot), and a prompt for an added object, 
+          a <span class="method-name">Mask</span> is generated dynamically, 
+          simultaneously with the object generation throughout the diffusion process.</h2>
+      </div>
+    </div>
+  </section>
+
+
+
+<!-- Paper abstract -->
+<section class="section hero">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Recent advancements in generative models have revolutionized image generation and editing, 
+            making these tasks accessible to non-experts. This paper focuses on local image editing, 
+            particularly the task of adding new content to a loosely specified area. 
+            Existing methods often require a precise mask or a detailed description of the location, 
+            which can be cumbersome and prone to errors. We propose Click2Mask, a novel approach that 
+            simplifies the local editing process by requiring only a single point of reference 
+            (in addition to the content description). A mask is dynamically grown around this point 
+            during a Blended Latent Diffusion (BLD) process, guided by a masked CLIP-based 
+            semantic loss. Click2Mask surpasses the limitations of segmentation-based and fine-tuning 
+            dependent methods, offering a more user-friendly and contextually accurate solution. 
+            Our experiments demonstrate that Click2Mask not only minimizes user effort but also delivers 
+            competitive or superior local image manipulation results compared to SoTA methods, 
+            according to both human judgement and automatic metrics. Key contributions include the 
+            simplification of user input, the ability to freely add objects unconstrained by existing 
+            segments, and the integration potential of our dynamic mask approach within other editing methods.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+
+
+
+<!-- Method explanation -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+        <h2 class="title is-3">Method</h2>
+
+        <div class="content has-text-justified">
+
+          <p>
+            <span class="method-name">Click2Mask</span> aims to simplify local image editing 
+            by requiring only a single point of reference (such as a mouse click) 
+            for adding objects described in the prompt. 
+          </p>
+
+          </p>  
+          In contrast, current methods either rely on existing objects or segments and do not allow free-form editing, 
+          or they require a painstaking user effort to create masks or specify input images, target images, or edit locations. 
+          Our goal is to enable free-form editing where the manipulated area is not well-defined in advance, 
+          by providing only a <span class="method-name">Click</span>.
+          Our dynamically evolving mask approach can be also integrated 
+          as a mask generation/finetuning component within other methods that internally employ a mask.
+          </p>
+
+          <div class="container">
+            <img src="static/images/model/model.png" />
+            <br />
+          </div>
+          <p>
+            We utilize <a href=https://omriavrahami.com/blended-latent-diffusion-page>Blended Latent Diffusion</a> as our image editing backbone (green block), which performs diffusion steps while blending input background latents and text guided foreground latents. The pink block is our mask evolution process. Throughout the diffusion steps we evolve a mask dynamically by utilizing a masked CLIP-based semantic loss, to optimize the mask itself. For a more detailed explanation, please refer to the paper
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- RESULTS -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+      <h2 class="title is-3">Results</h2>
+        
+        <!-- Examples -->
+        <h3 class="title is-4">Output Examples</h3> <!--class=""title is-4 small-margin"-->
+        <div class="content has-text-justified">
+          <!-- <div class="column has-text-centered"> -->
+          <p>
+            <span class="method-name">Click2Mask</span> output examples. 
+            <br>
+            Each example includes an input image with a <span class="method-name">Click</span> (blue dot), 
+            followed by outputs corresponding to the prompts below.
+          </p>
+          <!-- </div> -->
+        </div>
+        <section class="hero is-light is-small">
+          <div class="hero-body">
+            <div class="container">
+              <div id="res-carousel" class="res-carousel slick-slider">
+
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/1_monster_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/1_big_ship.jpg" />
+                  <p class="prompt">"a big ship"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/1_monster.jpg" />
+                  <p class="prompt">"a sea monster"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/1_Iceberg.jpg" />
+                  <p class="prompt">"iceberg"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/6_giza_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/6_snow.jpg" />
+                  <p class="prompt">"snowy mountains"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/6_giza.jpg" />
+                  <p class="prompt">"the Great Pyramid of Giza"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/6_town.jpg" />
+                  <p class="prompt">"a town"</p>
+                </div>
+                
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/3_river_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/3_river.jpg" />
+                  <p class="prompt">"a river"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/3_hole.jpg" />
+                  <p class="prompt">"a hole in the ground"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/3_sportscar.jpg" />
+                  <p class="prompt">"a sports car"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/5_volcano_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/5_volcano.jpg" />
+                  <p class="prompt">"a volcano erupting"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/5_fortress.jpg" />
+                  <p class="prompt">"a fortress"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/5_slopes.jpg" />
+                  <p class="prompt">"skiing slopes"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/2_bonfire_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/2_bonfire.jpg" />
+                  <p class="prompt">"a bonfire"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/2_sand.jpg" />
+                  <p class="prompt">"a pile of sand"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/2_flowers.jpg" />
+                  <p class="prompt">"flowers"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/4_hut_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/4_hut.jpg" />
+                  <p class="prompt">"a small hut"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/4_lake.jpg" />
+                  <p class="prompt">"iced lake"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/examples/4_igloo.jpg" />
+                  <p class="prompt">"an igloo"</p>
+                </div>             
+
+              </div>
+            </div>
+          </div>
+        </section>
+        </div>
+    </div>
+  </div>
+</section> 
+
+
+
+<!-- Comparisons to SoTA -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+        <h3 class="title is-4">Qualitative Comparisons with SoTA Methods</h3>
+        <div class="content has-text-justified">
+          <!-- <div class="column has-text-centered"> -->
+          <p>
+            A qualitative comparison of the SoTA methods <a href="https://emu-edit.metademolab.com/">Emu Edit</a>, <a href="https://osu-nlp-group.github.io/MagicBrush/">MagicBrush</a> and <a href="https://www.timothybrooks.com/instruct-pix2pix">InstructPix2Pix</a> with our model <span class="method-name">Click2Mask</span>. 
+            <br>
+            Upper prompts were given to baselines, and lower (shorter) ones to <span class="method-name">Click2Mask</span>.
+            <br>
+            Inputs contain the <span class="method-name">Click</span> (blue dot) given to <span class="method-name">Click2Mask</span>.         
+          </p>
+          <!-- </div> -->
+        </div>
+        <section class="hero is-light is-small">
+          <div class="hero-body">
+            <div class="container">
+
+              <div>
+                <p class="prompt">"have a knife laying between the orange and apple"</p>
+                <p class="prompt">"a knife"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/apples_2261/apples_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/apples_2261/apples_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/apples_2261/apples_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/apples_2261/apples_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/apples_2261/apples_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+
+              <div>
+                <br><br>
+                <p class="prompt">"add a fruit stand to the right of the image"</p>
+                <p class="prompt">"a fruit stand"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/fruit_110t/fruit_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/fruit_110t/fruit_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/fruit_110t/fruit_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/fruit_110t/fruit_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/fruit_110t/fruit_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+
+              <div>
+                <br><br>
+                <p class="prompt">"add fringe to the pink lampshade"</p>
+                <p class="prompt">"fringe"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/lamp_425/lamp_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/lamp_425/lamp_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/lamp_425/lamp_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/lamp_425/lamp_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/lamp_425/lamp_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+
+              <div>
+                <br><br>
+                <p class="prompt">"add a tennis ball on top of the racket"</p>
+                <p class="prompt">"a tennis ball"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/racket_369/racket_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/racket_369/racket_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/racket_369/racket_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/racket_369/racket_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/racket_369/racket_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+                
+              <div>
+                <br><br>
+                <p class="prompt">"add Jupiter to the sky"</p>
+                <p class="prompt">"Jupiter"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/jupyter_18/jupyter_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/jupyter_18/jupyter_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/jupyter_18/jupyter_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/jupyter_18/jupyter_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/jupyter_18/jupyter_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+
+              <div>
+                <br><br>
+                <p class="prompt">"add a piece of fried chicken to the plate"</p>
+                <p class="prompt">"piece of fried chicken"</p>
+              </div>
+              <div class="compare-carousel slick-slider">
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/chicken_298/chicken_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/chicken_298/chicken_ours.jpg" /> 
+                  <p class="caption"><span class="method-name">Click2Mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/chicken_298/chicken_emu.jpg" />
+                  <p class="caption">Emu Edit</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/chicken_298/chicken_mb.jpg" />
+                  <p class="caption">MagicBrush</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/comparison/chicken_298/chicken_ip2p.jpg" />
+                  <p class="caption">InstructPix2Pix</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Comparison Study -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+        <h3 class="title is-4">Comparison Study with SoTA Methods</h3>
+
+        <div class="content has-text-justified">
+          <p>
+            We compare our method with mask-free SoTA methods: 
+            <a href="https://emu-edit.metademolab.com/">Emu Edit</a>, 
+            and <a href="https://osu-nlp-group.github.io/MagicBrush/">MagicBrush</a>. 
+            Due to the closed-source nature of Emu Edit, we rely on the  <a href="https://emu-edit.metademolab.com/#benchmark">Emu Edit Benchmark</a>.
+            We focused on the "add" category, sampling 100 items for evaluation. 
+            Each sample was pre-processed by removing location instructions and using instead a click to direct the edit. 
+            As shown below, <span class="method-name">Click2Mask</span> outperformed Emu Edit and MagicBrush in both a user study (involving 149 participants) 
+            and automatic metrics. For further details, please refer to the paper.           
+          </p>
+        </div>
+        <div class="columns is-centered">
+          <div class="column is-half">
+            <img src="static/images/tables/user_study.png" alt="User Study Image" class="img-fluid">
+          </div>
+          <div class="column is-half">
+            <img src="static/images/tables/automatic.png" alt="Automatic Image" class="img-fluid lower-image">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- Generated Masks -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">       
+        <h3 class="title is-4">Generated Masks</h3>  <!--class=""title is-4 small-margin"-->
+        <div class="content has-text-justified">
+          <p>
+            Examples of <span class="method-name">Masks</span> generated by our method. 
+            <br>
+            Each example shows a prompt and a <span class="method-name">Clicked</span> point (blue dot) on the input image, 
+            followed by the generated <span class="method-name">Mask</span> (purple overlay), and <span class="method-name">Click2Mask</span> output. 
+          </p>
+        </div>
+        <section class="hero is-light is-small">
+          <div class="hero-body">
+            <div class="container">
+
+              <div id="masks-carousel" class="masks-carousel slick-slider">
+                
+                <div class="vcentered-area">
+                  <p class="prompt">"a ceiling fan"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/fan_143/fan_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/fan_143/fan_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/fan_143/fan_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                
+                <div class="vcentered-area">
+                  <p class="prompt">"a green bowl"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/bowl_200/bowl_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/bowl_200/bowl_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/bowl_200/bowl_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+
+                <div class="vcentered-area">
+                  <p class="prompt">"a baby cow"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/cow_49/cow_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/cow_49/cow_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/cow_49/cow_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+
+                <div class="vcentered-area">
+                  <p class="prompt">"a helmet"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/helmet_214/helmet_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/helmet_214/helmet_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/helmet_214/helmet_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+
+                <div class="vcentered-area">
+                  <p class="prompt">"a butterfly"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/butterfly_124/butterfly_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/butterfly_124/butterfly_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/butterfly_124/butterfly_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+
+                <div class="vcentered-area">
+                  <p class="prompt">"a puppy"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/puppy_313/puppy_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/puppy_313/puppy_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/puppy_313/puppy_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                              
+                <div class="vcentered-area">
+                  <p class="prompt">"a reflection of a ghost"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/ghost_2290/ghost_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/ghost_2290/ghost_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/ghost_2290/ghost_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                
+                <div class="vcentered-area">
+                  <p class="prompt">"a bag of chips"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/chips_2309/chips_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/chips_2309/chips_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/chips_2309/chips_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                           
+                <div class="vcentered-area">
+                  <p class="prompt">"a person's hand holding the phone"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/phone_294/phone_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/phone_294/phone_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/phone_294/phone_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                       
+                <div class="vcentered-area">
+                  <p class="prompt">"a bunch of grapes"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/grapes_121/grapes_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/grapes_121/grapes_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/grapes_121/grapes_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+                    
+                <div class="vcentered-area">
+                  <p class="prompt">"leaves on the trees"</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/tree_434/tree_in_click.jpg" />
+                  <p class="caption">input + click</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/tree_434/tree_gen_mask_OVER_IN.jpg" />
+                  <p class="caption">generated mask</p>
+                </div>
+                <div class="item has-text-centered">
+                  <img src="./static/images/generated_masks/tree_434/tree_output.jpg" />
+                  <p class="caption">output</p>
+                </div>
+             
+               
+              </div>
+            </div>
+          </div>
+        </section>
+        </div>
+    </div>
+  </div>
+</section> 
+
+
+
+<!-- Edited Alpha-CLIP -->
+<section class="section my-section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-12">
+        <h2 class="title is-3">Evaluating Edited Regions in Maskless Methods</h2>
+        <div class="content has-text-justified">
+          <p>
+            In order to evaluate the edited region in mask-free methods (such as Emu Edit, MagicBrush, InstructPix2Pix, and others), 
+            thus allowing comparisons, we offer the "Edited Alpha-CLIP" procedure.
+            We extract a mask specifying closely the edited region, 
+            and utilize <a href="https://aleafy.github.io/alpha-clip/">Alpha-CLIP</a> 
+            <!-- (a masked CLIP-based semantic loss)  -->
+            to evaluate the similarity between the masked area and the prompt. For further details, see the paper.          
+          </p>
+          <p>
+            Examples of mask extractions can be found below. 
+            The upper prompt was given to Emu Edit and MagicBrush, and the lower was given to <span class="method-name">Click2Mask</span>.
+            <br>
+            In each method, the left image is the output, and the right image shows the extracted mask (green overlay).
+          </p>
+          </div>
+
+        <section class="hero is-light is-small">
+          <div class="hero-body">
+            <div class="container">
+              <div class="container">
+
+                <div>
+                  <p class="prompt">"Add a sandcastle to the right of the dog"</p>
+                  <p class="prompt">"A sandcastle"</p>
+                </div>
+                <div id="edited-alpha-carousel" class="edited-alpha-carousel slick-slider">
+                  <div class="item has-text-centered">
+                    <img src="./static/images/edited_alpha_clip/335_in_click.jpg" />
+                    <p class="caption">input + click</p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/edited_alpha_clip/ours_combined.jpg" /> 
+                    <p class="caption"><span class="method-name">Click2Mask</p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/edited_alpha_clip/emu_combined.jpg" />
+                    <p class="caption">Emu Edit</p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/edited_alpha_clip/mb_combined.jpg" />
+                    <p class="caption">MagicBrush</p>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+@misc{regev2024click2masklocaleditingdynamic,
+  title={Click2Mask: Local Editing with Dynamic Mask Generation}, 
+  author={Omer Regev and Omri Avrahami and Dani Lischinski},
+  year={2024},
+  eprint={2409.08272},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2409.08272}, 
+}
+      </code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            You are free to borrow the code from this website, we just ask that you link back to this page in the footer. This
+            page was adapted from <a href="https://omriavrahami.com/the-chosen-one/">this</a> source code.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Default Statcounter code for Click2Mask
+https://omeregev.github.io/click2mask -->
+<script type="text/javascript">
+  var sc_project=13035210; 
+  var sc_invisible=1; 
+  var sc_security="7095cb5a"; 
+  </script>
+  <script type="text/javascript"
+  src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript><div class="statcounter"><a title="web statistics"
+  href="https://statcounter.com/" target="_blank"><img class="statcounter"
+  src="https://c.statcounter.com/13035210/0/7095cb5a/1/" alt="web statistics"
+  referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
+ 

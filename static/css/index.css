@@ -1,0 +1,328 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+
+.footer .icon-link {
+    font-size: 25px;
+    color: #000;
+}
+
+.link-block a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.dnerf {
+  font-variant: small-caps;
+}
+
+
+.caption {
+  font-size: 1rem;
+  color: black;
+}
+
+.prompt {
+  font-size: 1rem;
+  color: black;
+  font-family: "Shantell Sans", cursive;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    "BNCE" 0,
+    "INFM" 0,
+    "SPAC" 0;
+}
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.teaser {
+  font-family: 'Google Sans', sans-serif;
+}
+
+
+.publication-title {
+}
+
+.publication-banner {
+  max-height: parent;
+
+}
+
+.publication-banner video {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  object-fit: fit;
+}
+
+.publication-header .hero-body {
+}
+
+.publication-title {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-authors {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-venue {
+    color: #555;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.publication-awards {
+    color: #ff3860;
+    width: fit-content;
+    font-weight: bolder;
+}
+
+.publication-authors {
+}
+
+.publication-authors a {
+   color: hsl(204, 86%, 53%) !important;
+}
+
+.publication-authors a:hover {
+    text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+}
+
+.publication-banner img {
+}
+
+.publication-authors {
+  /*color: #4286f4;*/
+}
+
+.publication-video {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    overflow: hidden;
+    border-radius: 10px !important;
+}
+
+.publication-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.publication-body img {
+}
+
+
+.slider-pagination .slider-page {
+  background: #000000;
+}
+
+.eql-cntrb { 
+  font-size: smaller;
+}
+
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 100%; /* Add this line */
+}
+
+.flex-content {
+  flex-grow: 1; /* Allow the text content to expand to fill the remaining space */
+}
+
+.method-name {
+  font-family: 'Titillium Web', sans-serif; 
+  font-weight: 600 !important;
+  /* font-variant: small-caps; */
+}
+
+
+.prompt {
+  font-family: "Shantell Sans", cursive;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    "BNCE" 0,
+    "INFM" 0,
+    "SPAC" 0;
+}
+
+.small-margin {
+  margin-bottom: 0.5rem !important;
+}
+
+.video-container {
+  border-radius: 15px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 500px; /* Adjust this value to your desired width */
+  margin: 0 auto;
+}
+
+.video-container video {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.results-carousel {
+  overflow: hidden;
+}
+
+.results-carousel .item {
+  margin: 0px;
+  overflow: hidden;
+  padding: 0px;
+  font-size: 0;
+}
+
+.results-carousel video {
+  margin: 0;
+}
+
+.results-carousel .item {
+  padding-left: 5px;
+  font-size: 0;
+}
+/* 
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+  font-size: 45px;
+}
+
+.slick-next {
+  right: -20px;
+}
+
+.slick-prev {
+  left: -45px;
+} */
+/* Target Slick arrow buttons directly */
+.slick-prev,
+.slick-next {
+  width: 50px !important;
+  height: 50px !important;
+  z-index: 1 !important;
+}
+
+/* Style the arrow icons */
+.slick-prev:before,
+.slick-next:before {
+  font-size: 45px !important;
+  line-height: 1 !important;
+  opacity: 0.9 !important;
+  color: black !important;
+}
+
+/* Position the arrows outside the carousel */
+.slick-prev {
+  left: -50px !important; /* Adjust this value as needed */
+}
+
+.slick-next {
+  right: -50px !important; /* Adjust this value as needed */
+}
+
+/* Ensure visibility on all backgrounds */
+.slick-prev:before,
+.slick-next:before {
+  text-shadow: 0px 0px 3px rgba(255,255,255,0.8);
+}
+
+/* Optional: Style for when arrows are hovered or focused */
+.slick-prev:hover:before,
+.slick-prev:focus:before,
+.slick-next:hover:before,
+.slick-next:focus:before {
+  opacity: 0.7 !important;
+}
+
+/* Adjust the carousel container to accommodate outside arrows */
+.slick-slider {
+  margin: 0 0px !important; /* Match this to the left/right values above */
+}
+
+/* the slides */
+.slick-slide {
+    margin: 0 3px;
+}
+
+.lower-image {
+  margin-top: 20px; /* Adjust the value as needed */
+}
+
+
+
+.vcentered-area {
+  width:100%;
+  padding: 10px 0;
+  position: relative;
+}
+
+
+#edited-alpha-carousel .item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px; /* Adjust this value to your desired height */
+}
+
+#edited-alpha-carousel .item img {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+#edited-alpha-carousel .input-click {
+  width: 50%; /* Make the input+click image smaller in width */
+}
+
+#edited-alpha-carousel .input-click img {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+}
+
+/* Ensure other images maintain 2:1 aspect ratio */
+#edited-alpha-carousel .item:not(.input-click) img {
+  aspect-ratio: 2 / 1;
+  width: 100%;
+}
+
+/* Adjust slick slider for variable width slides, only for this carousel */
+#edited-alpha-carousel .slick-track {
+  display: flex !important;
+}
+
+#edited-alpha-carousel .slick-slide {
+  height: inherit !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
