@@ -102,7 +102,6 @@ python scripts/text_editing_click2mask.py --image_path "examples/example1/img1.j
 
 3) The clicked point will be saved in the input directory as
 <span style="white-space: nowrap;">"path/to/input/image_click.jpg"</span> for future use.
-<br>
 For example:
 ```bash
 python scripts/text_editing_click2mask.py --image_path "examples/example2_existing_click/img2.jpg" --prompt "a sea monster" --output_dir "outputs" 
