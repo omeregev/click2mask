@@ -37,7 +37,7 @@ def get_surround(surround_from, surround_width, device, as_squeezed_np=False):
 
 class DynMask:
 
-    def __init__(self, click_path, args, init_image_tensor, device, total_steps):
+    def __init__(self, click_pil, args, init_image_tensor, device, total_steps):
         self.args = args
         self.device = device
         self.init_image = init_image_tensor
@@ -68,7 +68,7 @@ class DynMask:
         self.base_potential = None
         self.potential = None
         self.latent_mask = None
-        self.set_init_masks(click_path)
+        self.set_init_masks(click_pil)
 
         self.cached_masks_clones = {}
         self.closs_hist = {}
@@ -92,9 +92,9 @@ class DynMask:
         return norm_threshed
 
     @torch.no_grad()
-    def calc_potential(self, click_path, sigma_for_shape64):
+    def calc_potential(self, click_pil, sigma_for_shape64):
         dest_size = self.latent_size
-        click = Image.open(click_path).convert("L").resize(dest_size, Image.NEAREST)
+        click = click_pil.convert("L").resize(dest_size, Image.NEAREST)
         click = (np.array(click) > 125).astype(float)
         click = self.normalize_point_size(
             click, radius_for64=Const.POINT_ON_LATENT_RADIUS
@@ -111,9 +111,9 @@ class DynMask:
         return potential
 
     @torch.no_grad()
-    def set_init_masks(self, click_path, stretch_factor=1.0):
+    def set_init_masks(self, click_pil, stretch_factor=1.0):
         potential = self.calc_potential(
-            click_path, sigma_for_shape64=Const.SIGMA_FOR_SHAPE64
+            click_pil, sigma_for_shape64=Const.SIGMA_FOR_SHAPE64
         )
         self.base_potential = potential.detach().to(torch.float64)
         if self.base_potential.ndim == 2:

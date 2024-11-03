@@ -1,5 +1,6 @@
 import random
 import os
+import gc
 import numpy as np
 from PIL import Image
 import cv2
@@ -7,16 +8,18 @@ from diffusers import DDIMScheduler, StableDiffusionPipeline
 from pytorch_lightning import seed_everything
 import torch
 from scipy.ndimage import gaussian_filter
+import sys
+sys.path.append("./scripts")
 from dyn_mask import DynMask, get_surround
 from arguments import parse_args
-from click import Click
+from clicker import ClickCreate, ClickDraw
 from augmentations import ImageAugmentations
 from constants import Const, N
 
 
-def read_image(img_path: str, device, dest_size):
-    image = Image.open(img_path).convert("RGB")
-    image = image.resize(dest_size, Image.LANCZOS)
+def read_image(image: Image.Image, device, dest_size):
+    image = image.convert("RGB")
+    image = image.resize(dest_size, Image.LANCZOS) if dest_size != image.size else image
     image = np.array(image)
     image = image.astype(np.float32) / 255.0
     image = image[None].transpose(0, 3, 1, 2)
@@ -189,8 +192,8 @@ class Click2Mask:
     @torch.no_grad()
     def edit_image(
         self,
-        image_path,
-        click_path,
+        image_pil,
+        click_pil,
         prompts,
         height,
         width,
@@ -205,19 +208,19 @@ class Click2Mask:
 
         self.scheduler.set_timesteps(num_inference_steps)
 
-        image_pil = Image.open(image_path).resize((height, width), Image.LANCZOS)
-        image = np.array(image_pil)[:, :, :3]
-        source_latents = self._image2latent(image)
+        image_pil = image_pil.resize((height, width), Image.LANCZOS)
+        image_np = np.array(image_pil)[:, :, :3]
+        source_latents = self._image2latent(image_np)
 
         init_image_tensor = read_image(
-            img_path=image_path, device=self.device, dest_size=(height, width)
+            image=image_pil, device=self.device, dest_size=(height, width)
         )
 
         total_steps = num_inference_steps - int(
             len(self.scheduler.timesteps) * blending_percentage
         )
         dyn_mask = DynMask(
-            click_path, self.args, init_image_tensor, self.device, total_steps
+            click_pil, self.args, init_image_tensor, self.device, total_steps
         )
 
         text_input = self.tokenizer(
@@ -418,6 +421,51 @@ class Click2Mask:
         return results
 
 
+def click2mask_app(prompt: str, image_pil: Image.Image, point512: np.ndarray):
+    c2m = Click2Mask()
+    c2m.args.prompt = prompt
+    results = []
+
+    for mask_i in range(c2m.args.n_masks):
+        print(f"\nEvolving mask {mask_i + 1}...")
+        seed = (
+            c2m.args.seed
+            if (c2m.args.seed and mask_i == 0)
+            else random.sample(range(1, Const.MAX_SEED), 1)[0]
+        )
+        seed_everything(seed)
+
+        click_draw = ClickDraw()
+        click_pil, _ = click_draw(image_pil, point512=point512)
+
+        mask_i_results = c2m.edit_image(
+            image_pil=image_pil,
+            click_pil=click_pil,
+            prompts=[c2m.args.prompt] * Const.BATCH_SIZE,
+            height=Const.H,
+            width=Const.W,
+            num_inference_steps=Const.NUM_INFERENCE_STEPS,
+            num_static_inference_steps=Const.NUM_STATIC_INFERENCE_STEPS,
+            guidance_scale=Const.GUIDANCE_SCALE,
+            seed=seed,
+            blending_percentage=Const.BLENDING_START_PERCENTAGE,
+        )
+
+        results += mask_i_results
+
+    sorted_results = sorted(results, key=lambda k: k["dist"], reverse=True)
+    out_img = sorted_results[0]["im"]
+    out_img = (out_img / 2 + 0.5).clamp(0, 1)
+    out_img = out_img.detach().cpu().permute(0, 2, 3, 1).numpy().squeeze()
+    out_img = (out_img * 255).round().astype(np.uint8)
+
+    torch.cuda.empty_cache()
+    gc.collect()
+    print(f"\nCompleted.")
+
+    return out_img
+
+
 if __name__ == "__main__":
     c2m = Click2Mask()
 
@@ -441,8 +489,8 @@ if __name__ == "__main__":
             if os.path.exists(os.path.join(img_dir, f"{img_base_name}_click.{ext}"))
         ]
         if (not click_ext) or (mask_i == 0 and c2m.args.refresh_click):
-            clicker = Click()
-            c2m.args.click_path = clicker(
+            click_create = ClickCreate()
+            c2m.args.click_path = click_create(
                 c2m.args.image_path, os.path.join(img_dir, f"{img_base_name}_click.jpg")
             )
         else:
@@ -451,8 +499,8 @@ if __name__ == "__main__":
             )
 
         mask_i_results = c2m.edit_image(
-            image_path=c2m.args.image_path,
-            click_path=c2m.args.click_path,
+            image_pil=Image.open(c2m.args.image_path),
+            click_pil=Image.open(c2m.args.click_path),
             prompts=[c2m.args.prompt] * Const.BATCH_SIZE,
             height=Const.H,
             width=Const.W,
