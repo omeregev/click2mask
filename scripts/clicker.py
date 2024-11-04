@@ -1,8 +1,10 @@
+import sys
 import os.path
 from PIL import Image, ImageDraw
 import cv2
 import numpy as np
-from scripts.constants import Const
+sys.path.append("./scripts")
+from constants import Const
 
 
 class ClickCreate:
