@@ -87,7 +87,7 @@ class ClickDraw:
     ):
         img_size = (Const.W, Const.H)
         if original_image.mode != "RGB":
-            original_image = original_image.convert('RGB')
+            original_image = original_image.convert("RGB")
         if original_image.size != img_size:
             original_image = original_image.resize(img_size, Image.LANCZOS)
         click = Image.new("RGB", img_size, color="black")
