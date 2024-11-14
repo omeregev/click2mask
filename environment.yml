@@ -244,4 +244,6 @@ dependencies:
       - widgetsnbextension==3.6.0
       - yarl==1.7.2
       - zipp==3.8.0
-
+      - git+https://github.com/CompVis/taming-transformers.git@3ba01b241669f5ade541ce990f7650a3b8f65318#egg=taming_transformers
+      - clip @ git+https://github.com/openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1
+      - alpha-clip @ git+https://github.com/SunzeY/AlphaCLIP.git@3457474356108988bed7f0354a5cfeeeb8322aeb

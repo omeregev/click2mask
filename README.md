@@ -69,14 +69,6 @@ conda env create -f environment.yml
 conda activate c2m
 ```
 
-Install Taming Transformers, CLIP, and Alpha-CLIP:
-```bash
-pip install -e .
-pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
-pip install git+https://github.com/openai/CLIP.git
-pip install git+https://github.com/SunzeY/AlphaCLIP.git 
-```
-
 Download from [Alpha-CLIP Model Zoo](https://github.com/SunzeY/AlphaCLIP/blob/main/model-zoo.md) 
 the following checkpoint (1.2GB):
 ```bash

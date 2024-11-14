@@ -51,8 +51,8 @@ class ClickCreate:
         self.original_cv2 = self.image_cv2.copy()
         self.orig_image = Image.open(img_path).resize((Const.W, Const.H))
         print(
-            "Click on desired point (last click will be taken)."
-            " Press enter to save and continue."
+            "\nClick on desired point (last click will be taken)."
+            " Press 'Enter' to save and continue."
         )
         cv2.imshow("image", self.image_cv2)
 
