@@ -47,9 +47,9 @@ class ClickCreate:
             cv2.imshow("image", self.image_cv2)
 
     def __call__(self, img_path, click_path):
-        self.image_cv2 = cv2.resize(cv2.imread(img_path, 1), (512, 512))
+        self.image_cv2 = cv2.resize(cv2.imread(img_path, 1), (Const.W, Const.H))
         self.original_cv2 = self.image_cv2.copy()
-        self.orig_image = Image.open(img_path).resize((512, 512))
+        self.orig_image = Image.open(img_path).resize((Const.W, Const.H))
         print(
             "Click on desired point (last click will be taken)."
             " Press enter to save and continue."
@@ -85,8 +85,11 @@ class ClickDraw:
     def create_circle_around_point(
         self, original_image, row, column, circle_radius_945
     ):
-        img_size = (Const.H, Const.W)
-        original_image = original_image.resize(img_size, Image.LANCZOS)
+        img_size = (Const.W, Const.H)
+        if original_image.mode != "RGB":
+            original_image = original_image.convert('RGB')
+        if original_image.size != img_size:
+            original_image = original_image.resize(img_size, Image.LANCZOS)
         click = Image.new("RGB", img_size, color="black")
         circle_radius = int(round(img_size[0] / 945 * circle_radius_945))
         draw = ImageDraw.Draw(click)
@@ -104,7 +107,7 @@ class ClickDraw:
 
         original_cv2 = cv2.cvtColor(np.array(original_image), cv2.COLOR_RGB2BGR)
 
-        enlarged_radius = int(round(img_size[0] / 945 * circle_radius_945) * 1.5)
+        enlarged_radius = int(round(img_size[0] / 945 * circle_radius_945) * 1.3)
         cv2.circle(
             original_cv2,
             (column, row),

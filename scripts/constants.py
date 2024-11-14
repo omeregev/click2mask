@@ -12,7 +12,7 @@ class Const:
     DYN_COND_STOP = 0.25
     DYN_FINAL_STOP = 0.3
 
-    N_OUTS_FOR_DYN_MASK = 6
+    N_OUTS_FOR_DYN_MASK = 8
     N_RUNS_ON_SCORES = 2
     N_AUGS_ON_SCORES = 32
     AUG_NUM = 2

@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument(
         "--n_masks",
         type=int,
-        default=2,
+        default=1,
         help="Number of dynamic masks to generate"
     )
     parser.add_argument(

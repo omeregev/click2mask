@@ -30,7 +30,13 @@ example_prompts = [
     "A big ship",
     "An iceberg",
 ]
-example_point = [[308, 285]]
+example_point = [[320, 285]]
+
+
+class Cache:
+    orig_image = None
+    point512 = None
+    generation_performed = False  # New flag to track if generation has been performed
 
 
 def handle_checkpoint(chunk_size=1024 * 1024):
@@ -73,51 +79,61 @@ def extract_last_point512(image_prompter):
     return point
 
 
-def mark_last_click(image_prompter, example=True):
+def assert_inputs(image_prompter, text, example):
+    ACTION = "<br><br>Refresh or click 'Clear' to continue"
+
+    if Cache.generation_performed:
+        raise gr.Error("Please upload a new image before generating again." + ACTION)
+    if image_prompter is None:
+        raise gr.Error("Please upload an image." + ACTION)
+    if not text or text.strip() == "":
+        raise gr.Error("Please provide a text prompt." + ACTION)
+    if not example and (
+        not image_prompter["points"] or len(image_prompter["points"]) == 0
+    ):
+        raise gr.Error("Please click on the image to indicate the edit area." + ACTION)
+
+
+def arrange_inputs(image_prompter, text, example=False):
+    assert_inputs(image_prompter, text, example)
     click_draw = ClickDraw()
     if not example:
-        point512 = extract_last_point512(image_prompter)
+        Cache.point512 = extract_last_point512(image_prompter)
     else:
-        point512 = np.array(example_point[-1]).astype(int)[::-1]
+        Cache.point512 = np.array(example_point[-1]).astype(int)[::-1]
 
-    _, image_prompter["image"] = click_draw(image_prompter["image"],
-                                            point512=point512)
+    Cache.orig_image = image_prompter["image"]
+    img_size = (Const.W, Const.H)
+    if Cache.orig_image.mode != "RGB":
+        Cache.orig_image = Cache.orig_image.convert("RGB")
+    if Cache.orig_image.size != img_size:
+        Cache.orig_image = Cache.orig_image.resize(img_size, Image.LANCZOS)
+    _, image_prompter["image"] = click_draw(Cache.orig_image, point512=Cache.point512)
+
     return image_prompter
 
 
-def assert_inputs_and_mark_last_click(image_prompter, text):
-    if image_prompter is None:
-        raise gr.Error("Please upload an image")
-    if not text or text.strip() == "":
-        raise gr.Error("Please provide a text prompt")
-    if not image_prompter["points"] or len(image_prompter["points"]) == 0:
-        raise gr.Error("Please click on the image to indicate the edit area")
-
-    return mark_last_click(image_prompter, example=False)
+def arrange_example_inputs(image_prompter, text):
+    return arrange_inputs(image_prompter, text, example=True)
 
 
-def generate(image_prompter, text):
-    point512 = extract_last_point512(image_prompter)
-    return click2mask_app(text, image_prompter["image"], point512)
+def generate(text):
+    Cache.generation_performed = True
+    return click2mask_app(text, Cache.orig_image, Cache.point512)
 
 
 def load_example_inputs():
-    example_prompt = random.choice(example_prompts)
-    example_image_clicked = Image.open("examples/gradio/img3_clicked.png")
-    clicked_image_dict = {
-        "image": example_image_clicked,
-    }
-    return clicked_image_dict, example_prompt
-
-
-def generate_example_output(text):
+    Cache.generation_performed = False
     example_image = Image.open("examples/gradio/img3.jpg")
-    input_image_dict = {"image": example_image, "points": example_point}
-    assert_inputs_and_mark_last_click(input_image_dict, text)
-    return generate(input_image_dict, text)
+    example_prompt = random.choice(example_prompts)
+    image_dict = {
+        "image": example_image,
+    }
+    return image_dict, example_prompt
 
 
 def clear_fields():
+    Cache.generation_performed = False
     return None, "", None
 
 
@@ -187,25 +203,25 @@ with gr.Blocks(
             )
 
     generate_button.click(
-        fn=assert_inputs_and_mark_last_click,
+        fn=arrange_inputs,
         inputs=[image_input, text_input],
         outputs=image_input
-    ).then(
+    ).success(
         fn=generate,
-        inputs=[image_input, text_input],
-        outputs=image_output
+        inputs=text_input,
+        outputs=image_output,
     )
 
     example_button.click(
         fn=load_example_inputs,
         inputs=[],
         outputs=[image_input, text_input],
-    ).then(
-        fn=mark_last_click,
-        inputs=image_input,
+    ).success(
+        fn=arrange_example_inputs,
+        inputs=[image_input, text_input],
         outputs=image_input
-    ).then(
-        fn=generate_example_output,
+    ).success(
+        fn=generate,
         inputs=text_input,
         outputs=image_output
     )
@@ -215,6 +231,7 @@ with gr.Blocks(
         inputs=[],
         outputs=[image_input, text_input, image_output],
     )
+
 
 if __name__ == "__main__":
     handle_checkpoint()
