@@ -1,0 +1,15 @@
+torch==1.11.0
+taming_transformers @ git+https://github.com/CompVis/taming-transformers.git@3ba01b241669f5ade541ce990f7650a3b8f65318
+clip @ git+https://github.com/openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1
+alpha-clip @ git+https://github.com/SunzeY/AlphaCLIP.git@3457474356108988bed7f0354a5cfeeeb8322aeb
+gradio-image-prompter
+kornia
+opencv-python
+git+https://github.com/huggingface/diffusers
+pytorch-lightning
+scikit-fmm
+torchvision
+scipy
+transformers
+loralib
+accelerate
