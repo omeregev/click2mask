@@ -1,6 +1,7 @@
 ---
 title: CLick2Mask
 license: other
+license_name: MIT License with Commons Clause Restriction
 emoji: 🔵
 colorFrom: indigo
 colorTo: gold
@@ -8,6 +9,7 @@ sdk: gradio
 sdk_version: 4.44.1
 app_file: app.py
 pinned: false
+short_description: Official App for Click2Mask
 ---
 
 # Click2Mask: Local Editing with Dynamic Mask Generation
