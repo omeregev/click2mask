@@ -308,7 +308,7 @@ class Click2Mask:
             if out_i > 0:
                 seed_i = seeds_to_run[out_i - 1]
                 orig_l = torch.randn(
-                    (batch_size, self.unet.in_channels, height // 8, width // 8),
+                    (batch_size, self.unet.config.in_channels, height // 8, width // 8),
                     generator=torch.manual_seed(seed_i),
                 )
                 orig_l = orig_l.to(self.device).half()

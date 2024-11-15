@@ -36,7 +36,7 @@ example_point = [[320, 285]]
 class Cache:
     orig_image = None
     point512 = None
-    generation_performed = False  # New flag to track if generation has been performed
+    generation_performed = False
 
 
 def handle_checkpoint(chunk_size=1024 * 1024):
@@ -236,4 +236,5 @@ with gr.Blocks(
 if __name__ == "__main__":
     handle_checkpoint()
     with contextlib.suppress(DeprecationWarning):
-        demo.launch(share=True)
+        demo.queue(concurrency_count=1)
+        demo.launch(share=False)

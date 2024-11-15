@@ -1,3 +1,15 @@
+---
+title: CLick2Mask
+license: other
+emoji: 🔵
+colorFrom: indigo
+colorTo: gold
+sdk: gradio
+sdk_version: 4.44.1
+app_file: app.py
+pinned: false
+---
+
 # Click2Mask: Local Editing with Dynamic Mask Generation
 
 Official PyTorch Implementation for 
@@ -143,4 +155,4 @@ If you find this helpful for your research, please reference the following:
 This code is based on 
 [Blended Latent Diffusion](https://github.com/omriav/blended-latent-diffusion/tree/master) 
 and on [Latent Diffusion Models](https://github.com/CompVis/latent-diffusion).
-
+We thank also [Image Prompter for Gradio](https://github.com/PhyscalX/gradio-image-prompter).
