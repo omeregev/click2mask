@@ -36,7 +36,7 @@ example_point = [[320, 285]]
 class Cache:
     orig_image = None
     point512 = None
-    generation_performed = False 
+    generation_performed = False
 
 
 def handle_checkpoint(chunk_size=1024 * 1024):
