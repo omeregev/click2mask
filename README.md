@@ -1,4 +1,4 @@
-# Click2Mask: Local Editing with Dynamic Mask Generation [AAAI 2025]
+# [AAAI 2025] Click2Mask: Local Editing with Dynamic Mask Generation
 
 Official PyTorch Implementation for 
 ["Click2Mask: Local Editing with Dynamic Mask Generation"](https://omeregev.github.io/click2mask/).
