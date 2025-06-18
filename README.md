@@ -8,9 +8,9 @@ Official PyTorch Implementation for
 [![Paper PDF](https://img.shields.io/badge/Paper-PDF-red?style=flat&logo=adobe)](https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf)
 [![YouTube Video](https://img.shields.io/badge/Video-YouTube-red?style=flat&logo=youtube)](https://youtu.be/A0ZEVTm9SLw?si=_coDIWRXa8Wo-2na)
 [![Hugging Face Demo](https://img.shields.io/badge/🤗%20Hugging%20Face-Demo-yellow?style=flat)](https://huggingface.co/spaces/omeregev/click2mask)
-![New](https://img.shields.io/badge/NEW!-brightgreen?style=flat)
+[![NEW!](https://img.shields.io/badge/NEW!-brightgreen?style=flat)](https://huggingface.co/spaces/omeregev/click2mask)
 [![Colab](https://img.shields.io/badge/Colab-Demo-orange?style=flat&logo=googlecolab)](https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb)
-![New](https://img.shields.io/badge/NEW!-brightgreen?style=flat)
+[![NEW!](https://img.shields.io/badge/NEW!-brightgreen?style=flat)](https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb)
 <br><br>
 
 <img src="imgs/teaser.gif"/>
