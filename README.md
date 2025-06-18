@@ -48,11 +48,11 @@ where the manipulated area is not well-defined, using just a  <span style="white
 
 ### 🤗 Hugging Face Demo
 Try it instantly in your browser - no setup required.  
-[**Launch Demo →**](https://huggingface.co/spaces/YOUR_USERNAME/click2mask)
+[**Launch Demo →**](https://huggingface.co/spaces/omeregev/click2mask)
 
 ### <img src="https://colab.research.google.com/img/colab_favicon_256px.png" width="25" height="25" align="center"> Google Colab Demo
 Includes both Gradio interface and command line for advanced usage.  
-[**Open in Colab →**](https://colab.research.google.com/github/YOUR_USERNAME/click2mask/blob/main/demo.ipynb)
+[**Open in Colab →**](https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb)
 
 ## Results
 
@@ -78,7 +78,7 @@ Inputs contain the <span style="white-space: nowrap;">
 
 ## Installation
 
-> 💡Check out our [**Hugging Face Demo**](https://huggingface.co/spaces/YOUR_USERNAME/click2mask) or [**Google Colab Demo**](https://colab.research.google.com/github/YOUR_USERNAME/click2mask/blob/main/demo.ipynb) for instant access without installing.
+> 💡Check out our [**Hugging Face Demo**](https://huggingface.co/spaces/omeregev/click2mask) or [**Google Colab Demo**](https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb) for instant access without installing.
 
 ### Clone the Repository
 ```bash
