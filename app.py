@@ -1,239 +1,166 @@
-from gradio_image_prompter import ImagePrompter
-from scripts.text_editing_click2mask import click2mask_app
-import warnings
-import contextlib
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
+import os
+import random
+import requests
+from pathlib import Path
+
 import gradio as gr
 import numpy as np
-import random
-import os
-import requests
-from tqdm import tqdm
 from PIL import Image
-from scripts.clicker import ClickDraw
+
 from scripts.constants import Const
+from scripts.text_editing_click2mask import click2mask_app
+from scripts.clicker import ClickDraw
 
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="gradio")
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="fastapi")
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
-
-example_prompts = [
-    "A sea monster",
-    "A big ship",
-    "An iceberg",
-]
-example_point = [[320, 285]]
+# -----------------------------------------------------------------------------#
+# Download model checkpoint once                                               #
+# -----------------------------------------------------------------------------#
+CKPT_URL = (
+    "https://download.openxlab.org.cn/models/SunzeY/AlphaCLIP/weight/"
+    "clip_l14_336_grit1m_fultune_8xe.pth"
+)
+CKPT_PATH = Path("checkpoints") / "clip_l14_336_grit1m_fultune_8xe.pth"
 
 
-class Cache:
-    orig_image = None
-    point512 = None
-    generation_performed = False
-
-
-def handle_checkpoint(chunk_size=1024 * 1024):
-    url = "https://download.openxlab.org.cn/models/SunzeY/AlphaCLIP/weight/clip_l14_336_grit1m_fultune_8xe.pth"
-    os.makedirs("checkpoints", exist_ok=True)
-    destination_path = "checkpoints/clip_l14_336_grit1m_fultune_8xe.pth"
-
-    if os.path.exists(destination_path):
+def download_checkpoint() -> None:
+    """Download the model weights if they are not already on disk."""
+    if CKPT_PATH.exists():
+        print("Checkpoint already exists, skipping download.")
         return
 
-    print(f"Downloading {url} to {destination_path}")
-    response = requests.get(url, stream=True)
-    response.raise_for_status()  # Ensure download is successful
-
-    total_size = int(response.headers.get("content-length", 0))
-    progress_step = total_size // 20
-
-    with open(destination_path, "wb") as file, tqdm(
-        desc="Downloading",
-        total=total_size,
-        unit="B",
-        unit_scale=True,
-        unit_divisor=1024,
-        miniters=progress_step,  # Update only every 5%
-    ) as progress_bar:
-        for chunk in response.iter_content(chunk_size=chunk_size):
-            if chunk:  # Filter out keep-alive chunks
-                file.write(chunk)
-                progress_bar.update(len(chunk))
-
+    print("Downloading model checkpoint …")
+    CKPT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with requests.get(CKPT_URL, stream=True) as r:
+        r.raise_for_status()
+        with CKPT_PATH.open("wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
     print("Download completed.")
 
 
-def extract_last_point512(image_prompter):
-    point = np.array(image_prompter["points"][-1][:2]).astype(int)
-    point[0] = (point[0] * (Const.W / image_prompter["image"].size[0])).astype(int)  # pil, width is first
-    point[1] = (point[1] * (Const.H / image_prompter["image"].size[1])).astype(int)
-    point = point[::-1]
-
-    return point
-
-
-def assert_inputs(image_prompter, text, example):
-    ACTION = "<br><br>Refresh or click 'Clear' to continue"
-
-    if Cache.generation_performed:
-        raise gr.Error("Please upload a new image before generating again." + ACTION)
-    if image_prompter is None:
-        raise gr.Error("Please upload an image." + ACTION)
-    if not text or text.strip() == "":
-        raise gr.Error("Please provide a text prompt." + ACTION)
-    if not example and (
-        not image_prompter["points"] or len(image_prompter["points"]) == 0
-    ):
-        raise gr.Error("Please click on the image to indicate the edit area." + ACTION)
+# -----------------------------------------------------------------------------#
+# Helper functions                                                             #
+# -----------------------------------------------------------------------------#
+example_prompts = ["A sea monster", "A big ship", "An iceberg"]
+example_image_path = "examples/gradio/img3.jpg"
+example_point = [320, 285]  # x, y
 
 
-def arrange_inputs(image_prompter, text, example=False):
-    assert_inputs(image_prompter, text, example)
-    click_draw = ClickDraw()
-    if not example:
-        Cache.point512 = extract_last_point512(image_prompter)
-    else:
-        Cache.point512 = np.array(example_point[-1]).astype(int)[::-1]
-
-    Cache.orig_image = image_prompter["image"]
-    img_size = (Const.W, Const.H)
-    if Cache.orig_image.mode != "RGB":
-        Cache.orig_image = Cache.orig_image.convert("RGB")
-    if Cache.orig_image.size != img_size:
-        Cache.orig_image = Cache.orig_image.resize(img_size, Image.LANCZOS)
-    _, image_prompter["image"] = click_draw(Cache.orig_image, point512=Cache.point512)
-
-    return image_prompter
+def resize_to_512(image: Image.Image) -> Image.Image:
+    """Convert to RGB and resize to 512×512 if needed."""
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+    if image.size != (Const.W, Const.H):
+        image = image.resize((Const.W, Const.H), Image.LANCZOS)
+    return image
 
 
-def arrange_example_inputs(image_prompter, text):
-    return arrange_inputs(image_prompter, text, example=True)
+def extract_point512(xy, img_size):
+    """Convert click (x, y) in UI coords → (row, col) in 512×512 space."""
+    x, y = xy
+    scale_x = Const.W / img_size[0]
+    scale_y = Const.H / img_size[1]
+    return int(y * scale_y), int(x * scale_x)  # (row, col)
 
 
-def generate(text):
-    Cache.generation_performed = True
-    return click2mask_app(text, Cache.orig_image, Cache.point512)
+# -----------------------------------------------------------------------------#
+# Gradio UI                                                                    #
+# -----------------------------------------------------------------------------#
+CSS = """
+.btn-generate { background-color: #b2f2bb !important; color: black !important; }
+.btn-clear    { background-color: #ffc9c9 !important; color: black !important; }
+.btn-example  { background-color: #dee2e6 !important; color: black !important; }
+.centered     { text-align: center; }
+"""
 
+with gr.Blocks(css=CSS) as demo:
+    # ---------- per-session state ----------
+    orig_image_state = gr.State()   # PIL.Image or None
+    point_state = gr.State()        # tuple(row, col) or None
 
-def load_example_inputs():
-    Cache.generation_performed = False
-    example_image = Image.open("examples/gradio/img3.jpg")
-    example_prompt = random.choice(example_prompts)
-    image_dict = {
-        "image": example_image,
-    }
-    return image_dict, example_prompt
+    # ---------- layout ----------
+    with gr.Row():
+        with gr.Column(scale=1):
+            gr.Markdown("### Upload and Click on Image", elem_classes="centered")
+            image = gr.Image(type="pil", height=512, width=512, label="Input")
+        with gr.Column(scale=1):
+            gr.Markdown("### Generated Image", elem_classes="centered")
+            output = gr.Image(
+                height=512, width=512, label="Output", show_download_button=True
+            )
 
+    prompt = gr.Textbox(label="Text Prompt", placeholder="e.g. A sea monster")
 
-def clear_fields():
-    Cache.generation_performed = False
-    return None, "", None
+    with gr.Row():
+        gen_btn = gr.Button("Generate", elem_classes="btn-generate")
+        ex_btn = gr.Button("Load Example", elem_classes="btn-example")
+        clr_btn = gr.Button("Reset", elem_classes="btn-clear")
 
+    # ---------- callbacks ----------
+    def on_upload(image):
+        """Handle file drop / selection."""
+        image = resize_to_512(image)
+        return image, image, None  # show img, store orig_image_state, clear point
 
-with gr.Blocks(
-    theme=gr.themes.Default().set(
-        button_primary_background_fill="rgb(164, 190, 237)",
-        button_primary_background_fill_hover="rgb(144, 170, 217)",
-        button_primary_text_color="black",
-        button_secondary_background_fill="rgb(183, 225, 183)",
-        button_secondary_background_fill_hover="rgb(163, 205, 163)",
-        button_secondary_text_color="black",
+    def on_click(image, evt: gr.SelectData, orig_image):
+        """Handle a click on the input image."""
+        if orig_image is None:
+            raise gr.Error("Upload an image first.")
+        point512 = extract_point512(evt.index, image.size)
+        _, img_marked = ClickDraw()(orig_image, point512=point512)
+        return img_marked, orig_image, point512
+
+    def generate_image(prompt_txt, orig_image, point512):
+        """Generate new image given prompt and point."""
+        if not prompt_txt or prompt_txt.strip() == "":
+            raise gr.Error("Please enter a prompt.")
+        if orig_image is None or point512 is None:
+            raise gr.Error("Upload and click on an image first.")
+        return click2mask_app(prompt_txt, orig_image, point512)
+
+    def clear_all():
+        """Reset UI and session state."""
+        return None, "", None, None  # clear image, prompt, orig_state, point_state
+
+    def load_example():
+        """Load predefined example."""
+        img = resize_to_512(Image.open(example_image_path))
+        point512 = np.array(example_point[::-1])  # (y, x)
+        _, img_marked = ClickDraw()(img, point512=point512)
+        example_prompt = random.choice(example_prompts)
+        return img_marked, example_prompt, img, point512
+
+    # ---------- wiring ----------
+    image.upload(
+        fn=on_upload,
+        inputs=image,
+        outputs=[image, orig_image_state, point_state],
     )
-) as demo:
-    with gr.Row():
-        with gr.Column(scale=1):
-            gr.Markdown("### Input")
-            image_input = ImagePrompter(
-                type="pil",
-                label="Click on the image to indicate the edit area (last click counts)",
-                height=512,
-                width=512,
-            )
-        with gr.Column(scale=1):
-            gr.Markdown("### Edited Image")
-            image_output = gr.Image(
-                show_download_button=True,
-                interactive=False,
-                height=512,
-                width=512,
-            )
-
-    with gr.Row():
-        with gr.Column(scale=1):
-            text_input = gr.Textbox(
-                label="Text Prompt",
-                placeholder="Describe the object to add...",
-                interactive=True,
-            )
-        with gr.Column(scale=1):
-            pass
-
-    with gr.Row():
-        with gr.Column(scale=1):
-            generate_button = gr.Button(
-                "Generate",
-                variant="primary",
-            )
-        with gr.Column(scale=1):
-            pass
-
-    with gr.Row():
-        gr.Markdown(
-            "💡 *Click 'Load Example' for preloaded examples*",
-            elem_classes="center-text",
-        )
-
-    with gr.Row():
-        with gr.Column(scale=1):
-            example_button = gr.Button(
-                "Load Example",
-                variant="secondary",
-            )
-        with gr.Column(scale=1):
-            clear_button = gr.Button(
-                "Clear",
-                variant="stop",
-            )
-
-    generate_button.click(
-        fn=arrange_inputs,
-        inputs=[image_input, text_input],
-        outputs=image_input
-    ).success(
-        fn=generate,
-        inputs=text_input,
-        outputs=image_output,
+    image.select(
+        fn=on_click,
+        inputs=[image, orig_image_state],
+        outputs=[image, orig_image_state, point_state],
     )
-
-    example_button.click(
-        fn=load_example_inputs,
+    gen_btn.click(
+        fn=generate_image,
+        inputs=[prompt, orig_image_state, point_state],
+        outputs=output,
+    )
+    ex_btn.click(
+        fn=load_example,
         inputs=[],
-        outputs=[image_input, text_input],
-    ).success(
-        fn=arrange_example_inputs,
-        inputs=[image_input, text_input],
-        outputs=image_input
-    ).success(
-        fn=generate,
-        inputs=text_input,
-        outputs=image_output
+        outputs=[image, prompt, orig_image_state, point_state],
     )
-
-    clear_button.click(
-        fn=clear_fields,
+    clr_btn.click(
+        fn=clear_all,
         inputs=[],
-        outputs=[image_input, text_input, image_output],
+        outputs=[image, prompt, orig_image_state, point_state],
     )
 
-
+# -----------------------------------------------------------------------------#
+# Run                                                                          #
+# -----------------------------------------------------------------------------#
 if __name__ == "__main__":
-    handle_checkpoint()
-    with contextlib.suppress(DeprecationWarning):
-        demo.launch(share=True)
+    download_checkpoint()
+    demo.queue()
+    demo.launch(share=True)

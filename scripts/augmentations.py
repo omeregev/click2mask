@@ -11,7 +11,7 @@ class ImageAugmentations(nn.Module):
 
         self.augmentations = [
             K.RandomAffine(degrees=15, translate=0.1, p=p, padding_mode="border"),
-            K.RandomPerspective(0.7, p=p),
+            # K.RandomPerspective(0.7, p=p),
         ]
 
         self.resize = (

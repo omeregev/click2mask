@@ -3,20 +3,31 @@
 Official PyTorch Implementation for 
 ["Click2Mask: Local Editing with Dynamic Mask Generation"](https://omeregev.github.io/click2mask/).
 
-<a href="https://omeregev.github.io/click2mask/"><img src="imgs/point.png" alt="alt text" width="15" style="margin-right: 2px;"></a>
-<a href="https://omeregev.github.io/click2mask/">Project</a>
-<a href="https://arxiv.org/abs/2409.08272" style="margin-left: 15px;">
-  <img src="imgs/arxiv-logo.png" alt="alt text" width="15" style="margin-right: 2px;">
+<a href="https://omeregev.github.io/click2mask/">
+  <img src="https://img.shields.io/badge/Website-blue?style=flat&logo=github" alt="Website">
 </a>
-<a href="https://arxiv.org/abs/2409.08272">arXiv</a>
-<a href="https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf" style="margin-left: 15px;">
-  <img src="imgs/pdf.png" alt="alt text" width="15" style="margin-right: 2px;">
+<a href="https://arxiv.org/abs/2409.08272">
+  <img src="https://img.shields.io/badge/arXiv-2409.08272-b31b1b?style=flat&logo=arxiv" alt="arXiv">
 </a>
-<a href="https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf">Paper</a>
+<a href="https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf">
+  <img src="https://img.shields.io/badge/Paper-PDF-red?style=flat&logo=adobe" alt="Paper PDF">
+</a>
+<a href="https://youtu.be/A0ZEVTm9SLw?si=_coDIWRXa8Wo-2na">
+  <img src="https://img.shields.io/badge/Video-YouTube-red?style=flat&logo=youtube" alt="YouTube Video">
+</a>
+<a href="https://huggingface.co/spaces/omeregev/click2mask">
+  <img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Demo-yellow?style=flat" alt="Hugging Face Demo">
+  <img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
+</a>
+<a href="https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb">
+  <img src="https://img.shields.io/badge/Colab-Demo-orange?style=flat&logo=googlecolab" alt="Colab">
+  <img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
+</a>
 <br><br>
+
 <img src="imgs/teaser.gif"/>
 
-<a href="https://omeregev.github.io/click2mask/">**Click2Mask: Local Editing with Dynamic Mask Generation**</a>
+<a href="https://omeregev.github.io/click2mask/">**[AAAI 2025] Click2Mask: Local Editing with Dynamic Mask Generation**</a>
 <br>
 <a href="https://www.linkedin.com/in/omeregev/">Omer Regev</a>,
 <a href="https://omriavrahami.com/">Omri Avrahami</a>,
@@ -33,6 +44,15 @@ where the manipulated area is not well-defined, using just a  <span style="white
     <b>Click</b> <img src="imgs/point.png" alt="alt text" width="10" style="margin-right: 2px;">
 </span> for localization.
 
+## 🚀 New! Try Click2Mask Online
+
+### 🤗 Hugging Face Demo
+Try it instantly in your browser - no setup required.  
+[**Launch Demo →**](https://huggingface.co/spaces/YOUR_USERNAME/click2mask)
+
+### <img src="https://colab.research.google.com/img/colab_favicon_256px.png" width="25" height="25" align="center"> Google Colab Demo
+Includes both Gradio interface and command line for advanced usage.  
+[**Open in Colab →**](https://colab.research.google.com/github/YOUR_USERNAME/click2mask/blob/main/demo.ipynb)
 
 ## Results
 
@@ -56,21 +76,31 @@ Inputs contain the <span style="white-space: nowrap;">
 </span> given to **Click2Mask**.
 <img src="imgs/compare.png">
 
-
 ## Installation
-Go to project directory:
+
+> 💡Check out our [**Hugging Face Demo**](https://huggingface.co/spaces/YOUR_USERNAME/click2mask) or [**Google Colab Demo**](https://colab.research.google.com/github/YOUR_USERNAME/click2mask/blob/main/demo.ipynb) for instant access without installing.
+
+### Clone the Repository
 ```bash
-cd /path/to/project/click2mask
+git clone https://github.com/omeregev/click2mask.git
+cd click2mask
 ```
 
-Install and activate the conda virtual environment:
+### Install Dependencies
+**Option 1: Using pip (Recommended)**
+```bash
+pip install -r requirements.txt
+```
+
+**Option 2: Using Conda**  
+If you prefer conda or need a more isolated environment (note: uses older PyTorch version):
 ```bash
 conda env create -f environment.yml
 conda activate c2m
 ```
 
-Download from [Alpha-CLIP Model Zoo](https://github.com/SunzeY/AlphaCLIP/blob/main/model-zoo.md) 
-the following checkpoint (1.2GB):
+### Download Model Checkpoint
+Download the Alpha-CLIP checkpoint from [Alpha-CLIP Model Zoo](https://github.com/SunzeY/AlphaCLIP/blob/main/model-zoo.md) (1.2GB):
 ```bash
 mkdir checkpoints
 wget -P checkpoints https://download.openxlab.org.cn/models/SunzeY/AlphaCLIP/weight/clip_l14_336_grit1m_fultune_8xe.pth
@@ -79,8 +109,16 @@ wget -P checkpoints https://download.openxlab.org.cn/models/SunzeY/AlphaCLIP/wei
 If the above link is broken, you can use this 
 [Google Drive mirror](https://drive.google.com/file/d/1DeNbUv0lraDxJZItb7shTlvGW6z_Z9Si/view?usp=drive_link).
 
-
 ## Usage
+
+### Gradio Interface
+Launch the interactive web interface:
+```bash
+python app.py
+```
+Then open your browser at the provided interface link.
+
+### Command Line Interface
 1) Run:
 ```bash
 python scripts/text_editing_click2mask.py --image_path "<path/to/input/image>" --prompt "<the prompt>" --output_dir "<path/to/output/directory>" 
@@ -90,7 +128,6 @@ For example:
 python scripts/text_editing_click2mask.py --image_path "examples/example1/img1.jpg" --prompt "a sea monster" --output_dir "outputs" 
 ```
 2) A window will pop to enable a _clicked point_ over the input image. Once you have clicked with the mouse, press "Enter".
-
 
 3) The clicked point will be saved in the input directory as
 <span style="white-space: nowrap;">"path/to/input/image_click.jpg"</span> for future use.
@@ -124,7 +161,6 @@ similarity = edited_ac.edited_alpha_clip_sim(image_in_p, image_out_p, prompt, sa
 ```
 A higher result is better.
 
-
 ## Citation
 If you find this helpful for your research, please reference the following:
 ```bibtex
@@ -142,5 +178,4 @@ If you find this helpful for your research, please reference the following:
 ## Acknowledgements
 This code is based on 
 [Blended Latent Diffusion](https://github.com/omriav/blended-latent-diffusion/tree/master) 
-and on [Latent Diffusion Models](https://github.com/CompVis/latent-diffusion).
-
+and on [Stable Diffusion](https://github.com/CompVis/stable-diffusion).
