@@ -5,23 +5,23 @@ Official PyTorch Implementation for
 
 <a href="https://omeregev.github.io/click2mask/">
   <img src="https://img.shields.io/badge/Website-blue?style=flat&logo=github" alt="Website">
-</a>
-<a href="https://arxiv.org/abs/2409.08272">
+</a><!--
+--><a href="https://arxiv.org/abs/2409.08272">
   <img src="https://img.shields.io/badge/arXiv-2409.08272-b31b1b?style=flat&logo=arxiv" alt="arXiv">
-</a>
-<a href="https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf">
+</a><!--
+--><a href="https://omeregev.github.io/click2mask/static/paper/Click2Mask.pdf">
   <img src="https://img.shields.io/badge/Paper-PDF-red?style=flat&logo=adobe" alt="Paper PDF">
-</a>
-<a href="https://youtu.be/A0ZEVTm9SLw?si=_coDIWRXa8Wo-2na">
+</a><!--
+--><a href="https://youtu.be/A0ZEVTm9SLw?si=_coDIWRXa8Wo-2na">
   <img src="https://img.shields.io/badge/Video-YouTube-red?style=flat&logo=youtube" alt="YouTube Video">
-</a>
-<a href="https://huggingface.co/spaces/omeregev/click2mask">
-  <img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Demo-yellow?style=flat" alt="Hugging Face Demo">
-  <img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
-</a>
-<a href="https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb">
-  <img src="https://img.shields.io/badge/Colab-Demo-orange?style=flat&logo=googlecolab" alt="Colab">
-  <img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
+</a><!--
+--><a href="https://huggingface.co/spaces/omeregev/click2mask">
+  <img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Demo-yellow?style=flat" alt="Hugging Face Demo"><!--
+  --><img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
+</a><!--
+--><a href="https://colab.research.google.com/github/omeregev/click2mask/blob/main/demo.ipynb">
+  <img src="https://img.shields.io/badge/Colab-Demo-orange?style=flat&logo=googlecolab" alt="Colab"><!--
+  --><img src="https://img.shields.io/badge/NEW!-brightgreen?style=flat" alt="New">
 </a>
 <br><br>
 
@@ -48,7 +48,7 @@ where the manipulated area is not well-defined, using just a  <span style="white
 
 ### 🤗 Hugging Face Demo
 Try it instantly in your browser - no setup required.  
-[**Launch Demo →**](https://huggingface.co/spaces/omeregev/click2mask)
+[**Launch Demo →**](https://huggingface.co/spaces/YOUR_USERNAME/click2mask)
 
 ### <img src="https://colab.research.google.com/img/colab_favicon_256px.png" width="25" height="25" align="center"> Google Colab Demo
 Includes both Gradio interface and command line for advanced usage.  
