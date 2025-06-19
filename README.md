@@ -104,7 +104,7 @@ Launch the interactive web interface:
 ```bash
 python app.py
 ```
-Then open your browser at the provided interface link.
+Then open your browser at the provided public URL interface link.
 
 ### Command Line Interface
 1) Run:
