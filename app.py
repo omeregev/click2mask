@@ -89,7 +89,7 @@ with gr.Blocks(css=CSS) as demo:
                 height=512, width=512, label="Output", show_download_button=True
             )
 
-    prompt = gr.Textbox(label="Text Prompt", placeholder="e.g. A sea monster")
+    prompt = gr.Textbox(label="What object to add?", placeholder="e.g. a sea monster")
 
     with gr.Row():
         gen_btn = gr.Button("Generate", elem_classes="btn-generate")
