@@ -30,7 +30,7 @@ where the manipulated area is not well-defined, using just a  <span style="white
     <b>Click</b> <img src="imgs/point.png" alt="alt text" width="10" style="margin-right: 2px;">
 </span> for localization.
 
-## 🚀 New! Try Click2Mask Online
+## 🚀 Try Click2Mask Online
 
 ### 🤗 Hugging Face Demo
 Try it instantly in your browser - no setup required.  
@@ -150,14 +150,16 @@ A higher result is better.
 ## Citation
 If you find this helpful for your research, please reference the following:
 ```bibtex
-@misc{regev2024click2masklocaleditingdynamic,
-      title={Click2Mask: Local Editing with Dynamic Mask Generation}, 
-      author={Omer Regev and Omri Avrahami and Dani Lischinski},
-      year={2024},
-      eprint={2409.08272},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2409.08272}, 
+@inproceedings{regev2025click2mask,
+    title={Click2Mask: Local Editing with Dynamic Mask Generation},
+    author={Regev, Omer and Avrahami, Omri and Lischinski, Dani},
+    booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+    volume={39},
+    number={7},
+    pages={6713-6721},
+    year={2025},
+    url={https://arxiv.org/abs/2409.08272},
+    note={Full version with appendices available on arXiv}
 }
 ```
 

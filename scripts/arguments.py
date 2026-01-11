@@ -37,7 +37,7 @@ def parse_args():
     parser.add_argument(
         "--model_path",
         type=str,
-        default="Manojb/stable-diffusion-2-1-base",
+        default="omeregev/sd-2-1-base-mirror",
         help="The path to the HuggingFace model",
     )
     parser.add_argument(

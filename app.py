@@ -15,7 +15,7 @@ from scripts.clicker import ClickDraw
 # Download model checkpoint once                                               #
 # -----------------------------------------------------------------------------#
 CKPT_URL = (
-    "https://huggingface.co/omeregev/click2mask-alphaclip-weights/resolve/main/"
+    "https://huggingface.co/omeregev/click2mask/resolve/main/"
     "clip_l14%40336_grit1m_fultune_8xe.pth"
 )
 CKPT_PATH = Path("checkpoints") / "clip_l14_336_grit1m_fultune_8xe.pth"
