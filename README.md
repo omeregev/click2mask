@@ -89,7 +89,7 @@ conda activate c2m
 Download the Alpha-CLIP checkpoint from [here](https://github.com/SunzeY/AlphaCLIP/blob/main/model-zoo.md) (1.2GB):
 ```bash
 mkdir checkpoints
-wget -P checkpoints https://huggingface.co/omeregev/click2mask-alphaclip-weights/resolve/main/clip_l14%40336_grit1m_fultune_8xe.pth
+wget -P checkpoints https://huggingface.co/omeregev/click2mask/resolve/main/clip_l14_336_grit1m_fultune_8xe.pth
 ```
 
 If the above link is broken, you can use this 
@@ -165,5 +165,4 @@ If you find this helpful for your research, please reference the following:
 
 ## Acknowledgements
 This code is based on 
-[Blended Latent Diffusion](https://github.com/omriav/blended-latent-diffusion/tree/master) 
-and on [Stable Diffusion](https://github.com/CompVis/stable-diffusion).
+[Blended Latent Diffusion](https://github.com/omriav/blended-latent-diffusion/tree/master) and [Stable Diffusion](https://github.com/CompVis/stable-diffusion), and utilizes [AlphaCLIP](https://github.com/SunzeY/AlphaCLIP).
